@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using api.Models;
 using System.Diagnostics;
+using System.IO;
 using api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,25 @@ namespace api.Controller
 
         public async Task<ActionResult<IEnumerable<ProblemStruct>>> GetProblems()
         {
-            return await _context.Problems.Include(p => p.TestCases).ToListAsync();
+            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Files");
+            
+            // Create the directory if it does not exist
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // Generate a unique file name (e.g., using GUID or timestamp)
+            string fileName = $"problem_{System.Guid.NewGuid()}.txt";
+            string filePath = Path.Combine(directoryPath, fileName);
+
+            // Create the file and write some content to it
+            string fileContent = "This is a problem file content.\n" + "You can add more content related to problems here.";
+            await System.IO.File.WriteAllTextAsync(filePath, fileContent);
+
+            // Return the file name as part of the response
+            return Ok(new { FileName = fileName });
+            //return await _context.Problems.Include(p => p.TestCases).ToListAsync();
         }
 
 
