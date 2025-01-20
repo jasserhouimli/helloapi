@@ -17,6 +17,6 @@ namespace api.Models
 
         public string Email { get; set; }
 
-        public bool isAdmin { get; set; } = false;
+        
     }
 }
