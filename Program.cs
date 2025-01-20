@@ -77,10 +77,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var migrator = scope.ServiceProvider.GetRequiredService<Microsoft.EntityFrameworkCore.Migrations.IMigrator>();
 
-    // Apply all pending migrations
-    migrator.Migrate();
+    // Apply migrations
+    dbContext.Database.Migrate();
 }
 
 
