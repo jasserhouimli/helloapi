@@ -6,8 +6,10 @@ zerops:
       # container be based on (can be an array)
       base: dotnet@8
 
-      # build your application
+      # install dotnet ef tools
       buildCommands:
+        - dotnet tool install --global dotnet-ef
+        # build your application
         - dotnet build -o app
         # Create the initial migration (if not already created)
         - dotnet ef migrations add InitialCreate --no-build
