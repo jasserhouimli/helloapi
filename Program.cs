@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlite("Data Source=modeforces.db");
+    options.UseNpgsql("Host=db;Database=db;Username=db;Password=zxZdA8BYRGgDbym8");
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
