@@ -18,4 +18,5 @@ zerops:
           httpSupport: true
       start: |
         # Run migrations before starting the app
-        dotnet api.dll --migrate
+        dotnet ef database update --no-build --project api.csproj  # Apply migrations
+        dotnet api.dll  # Run the app
