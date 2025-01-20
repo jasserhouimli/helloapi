@@ -1,7 +1,7 @@
 setup: dotnet0
 # ==== how to build your application ====
 build:
-  # what technologies should the build container be based on (can be an array)
+  # what technologies should the build container be based on (can be an )
   base: dotnet@8
 
   # build your application
