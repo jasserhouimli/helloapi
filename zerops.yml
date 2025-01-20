@@ -3,12 +3,16 @@ zerops:
     # ==== how to build your application ====
     build:
       # what technologies should the build
-      # container be based on (can be an )
+      # container be based on (can be an array)
       base: dotnet@8
 
       # build your application
       buildCommands:
         - dotnet build -o app
+        # Create the initial migration (if not already created)
+        - dotnet ef migrations add InitialCreate --no-build
+        # Apply migrations to update the database
+        - dotnet ef database update
 
       # select which files / folders to deploy
       # after the build successfully finished
