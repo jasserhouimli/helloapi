@@ -19,5 +19,5 @@ zerops:
           httpSupport: true
       start: |
         dotnet tool install --global dotnet-ef
-        dotnet ef database update --project ./api/api.csproj --startup-project ./api/api.csproj
+        dotnet ef database update
         dotnet api.dll
