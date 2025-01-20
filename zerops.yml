@@ -1,20 +1,48 @@
 zerops:
-  - setup: dotnet0
+  # supports monorepositories, just add
+  # one setup section after the other
+  - setup: ubuntu0
+    # ==== how to build your application ====
     build:
-      base: dotnet@8  # Use .NET 8 SDK for building
+      # select what technology should the
+      # build container be based on, can
+      # be different from service technology
+      # see docs for full list
+      base: ubuntu@24.04
 
+      # *optional* add additional dependencies
+      # on top of base technology (combination
+      # will be cached for next build)
+      # prepareCommands:
+      #   - apt-get something
+
+      # build your application
       buildCommands:
-        - dotnet tool restore  # Restore any tools defined in the tool manifest
-        - dotnet tool install --global dotnet-ef  # Ensure dotnet-ef is available for cc
-        - dotnet restore  # Restore dependencies for the application
-        - dotnet build -o app  # Build the application and output to the app directory
+        - echo 'while true; do echo "running"; sleep 15; done' > run.sh
+        - chmod +x run.sh
 
-      deployFiles: app/~  # Deploy the app files to Zerops
+      # select which files / folders to deploy
+      # after the build successfully finished
+      deployFiles:
+        - run.sh
 
+      # *optional*: which files / folders
+      # to cache for the next use
+      # cache:
+
+    # ==== how to run your application ====
     run:
-      base: dotnet@8  # Use .NET 8 runtime
-      ports:
-        - port: 7100
-          httpSupport: true
-      start: |
-        dotnet api.dll
+      base: ubuntu@24.04
+
+      # *optional* install dependencies that your
+      # runtime service requires (will be cached)
+      # prepareCommands:
+      #   - apt-get something
+
+      # *optional*: triggered before each start/restart
+      # of your application, to eg. clean cache
+      # initCommands:
+      #  - rm -rf ./cache
+
+      # how to start your application
+      start: ./run.sh
