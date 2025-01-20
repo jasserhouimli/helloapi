@@ -19,15 +19,5 @@ namespace api.Data
         
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Configure relationships and other configurations here if needed.
-            
-            modelBuilder.Entity<ProblemStruct>()
-                .HasMany(p => p.TestCases)
-                .WithOne()
-                .HasForeignKey(tc => tc.Id); // Assuming TestCase doesn't have a back reference to ProblemStruct.
-
-           
-        }
+   
 }
