@@ -2,6 +2,7 @@ using api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -76,11 +77,12 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    
-    // Generate and apply migrations programmatically
-    var migrator = dbContext.Database.GetService<Microsoft.EntityFrameworkCore.Migrations.IMigrator>();
-    migrator.Migrate(); // Applies all pending migrations
+    var migrator = scope.ServiceProvider.GetRequiredService<Microsoft.EntityFrameworkCore.Migrations.IMigrator>();
+
+    // Apply all pending migrations
+    migrator.Migrate();
 }
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
