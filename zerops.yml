@@ -18,5 +18,6 @@ zerops:
         - port: 7100
           httpSupport: true
       start: |
+        dotnet tool install --global dotnet-ef
         dotnet ef database update --project ./api/api.csproj --startup-project ./api/api.csproj
         dotnet api.dll
