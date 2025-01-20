@@ -2,41 +2,30 @@ zerops:
   - setup: dotnet0
     # ==== how to build your application ====
     build:
-      # what technologies should the build
-      # container be based on (can be an array)
+      # Base container to build the application
       base: dotnet@8
 
-      # install dotnet ef tools
+      # Install dotnet-ef tool globally
       buildCommands:
-        - dotnet tool install --global dotnet-ef
-        # build your application
+        - dotnet tool restore  # Restore any tools defined in the tool manifest (if you have one)
+        - dotnet tool install --global dotnet-ef  # Ensure dotnet-ef is installed globally
+
+        # Build the application
         - dotnet build -o app
-        # Create the initial migration (if not already created)
+
+        # Add initial migration if necessary
         - dotnet ef migrations add InitialCreate --no-build
-        # Apply migrations to update the database
+        
+        # Update the database with migrations
         - dotnet ef database update
 
-      # select which files / folders to deploy
-      # after the build successfully finished
-      # `~` can be used to mark starting point
-      # of deploy path, this example would deploy
-      # files in app folder without the folder
-      # itself
+      # Deploy files after successful build
       deployFiles: app/~
 
-    # ==== how to run your application ====
+    # ==== How to run your application ====
     run:
-      # what technology should the runtime
-      # container be based on, can be extended
-      # in `run.prepareCommands` using
-      # `zsc install nodejs@20`
       base: dotnet@8
-
-      # what ports your app listens on
-      # and whether it supports http traffic
       ports:
         - port: 7100
           httpSupport: true
-
-      # how to start your application
       start: dotnet api.dll
