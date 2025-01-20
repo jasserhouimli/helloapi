@@ -14,10 +14,7 @@ zerops:
         
 
         # Add initial migration if necessary
-        - dotnet ef migrations add InitialCreate --no-build
         
-        # Update the database with migrations
-        - dotnet ef database update
 
         - dotnet build -o app
 
