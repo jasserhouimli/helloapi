@@ -6,6 +6,7 @@ zerops:
       buildCommands:
         - dotnet tool restore  # Restore any tools defined in the tool manifest
         - dotnet tool install --global dotnet-ef  # Ensure dotnet-ef is available for migrations
+        - dotnet ef database update
         - dotnet restore  # Restore dependencies for the application
         - dotnet build -o app  # Build the application and output to the app directory
 
