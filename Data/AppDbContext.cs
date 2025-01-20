@@ -1,18 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Models;
-
 namespace api.Data
 {
-    public class AppDbContext : DbContext
+    [Route("[controller]")]
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public required DbSet<ProblemStruct> Problems { get; set; }
+        public required DbSet<Code> Codes { get; set; }
 
-        public DbSet<ProblemStruct> Problems { get; set; }
-        public DbSet<TestCase> TestCases { get; set; }
-        public DbSet<Code> Codes { get; set; }
-        public DbSet<Submission> Submissions { get; set; }
+        public required DbSet<Submission> Submissions { get; set; }
+        public required DbSet<User> Users { get; set; }
+        
+    }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configure relationships and other configurations here if needed.
             
@@ -21,15 +28,6 @@ namespace api.Data
                 .WithOne()
                 .HasForeignKey(tc => tc.Id); // Assuming TestCase doesn't have a back reference to ProblemStruct.
 
-            modelBuilder.Entity<Submission>()
-                .HasOne(s => s.ProblemStruct)
-                .WithMany(p => p.Submissions)
-                .HasForeignKey(s => s.problemId);
-            
-            modelBuilder.Entity<Submission>()
-                .HasOne(s => s.User)
-                .WithMany(u => u.Submissions)
-                .HasForeignKey(s => s.userId);
+           
         }
-    }
 }
