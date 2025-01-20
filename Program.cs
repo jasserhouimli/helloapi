@@ -76,8 +76,12 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.EnsureCreated(); // Creates the database and schema
+    
+    // Generate and apply migrations programmatically
+    var migrator = dbContext.Database.GetService<Microsoft.EntityFrameworkCore.Migrations.IMigrator>();
+    migrator.Migrate(); // Applies all pending migrations
 }
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
