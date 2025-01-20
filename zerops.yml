@@ -1,0 +1,28 @@
+setup: dotnet0
+# ==== how to build your application ====
+build:
+  # what technologies should the build container be based on (can be an array)
+  base: dotnet@8
+
+  # build your application
+  buildCommands:
+    # Assuming your project file is 'MyWebApi.csproj', replace it with your actual project name
+    - dotnet restore
+    - dotnet build -o app
+
+  # select which files/folders to deploy after the build is successful
+  # deploy the output from the 'app' directory
+  deployFiles: app/~
+
+# ==== how to run your application ====
+run:
+  # what technology should the runtime container be based on
+  base: dotnet@8
+
+  # what ports your app listens on and whether it supports http traffic
+  ports:
+    port: 5000
+    httpSupport: true
+
+  # how to start your application
+  start: dotnet api.dll
