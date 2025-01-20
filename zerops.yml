@@ -1,22 +1,21 @@
 zerops:
   - setup: dotnet0
     build:
-      base: dotnet@8
+      base: dotnet@8  # Use .NET 8 SDK for building
 
       buildCommands:
-        - dotnet tool restore  # Restore any tools (if you have tool manifest)
-        - dotnet tool install --global dotnet-ef  # Ensure dotnet-ef is available
+        - dotnet tool restore  # Restore any tools defined in the tool manifest
+        - dotnet tool install --global dotnet-ef  # Ensure dotnet-ef is available for migrations
+        - dotnet restore  # Restore dependencies for the application
+        - dotnet build -o app  # Build the application and output to the app directory
 
-        - dotnet build -o app  # Build the app
-
-      deployFiles: app/~
+      deployFiles: app/~  # Deploy the app files to Zerops
 
     run:
-      base: dotnet@8
+      base: dotnet@8  # Use .NET 8 runtime
       ports:
         - port: 7100
           httpSupport: true
       start: |
-        # Run migrations before starting the app
-        dotnet ef database update --no-build --project api.csproj  # Apply migrations
-        dotnet api.dll  # Run the app
+        dotnet ef database update --project ./api/api.csproj --startup-project ./api/api.csproj
+        dotnet api.dll
