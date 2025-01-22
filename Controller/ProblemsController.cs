@@ -9,16 +9,15 @@ using System.IO;
 using api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+
 namespace api.Controller
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProblemsController : ControllerBase
     {
-
-
         private readonly AppDbContext _context;
-
 
         public ProblemsController(AppDbContext context)
         {
@@ -26,35 +25,14 @@ namespace api.Controller
         }
 
         // GET: api/judge
-
         [HttpGet]
-
         public async Task<ActionResult<IEnumerable<ProblemStruct>>> GetProblems()
         {
-            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Files");
             
-            // Create the directory if it does not exist
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
-
-            // Generate a unique file name (e.g., using GUID or timestamp)
-            string fileName = $"problem_{System.Guid.NewGuid()}.txt";
-            string filePath = Path.Combine(directoryPath, fileName);
-
-            // Create the file and write some content to it
-            string fileContent = "This is a problem file content.\n" + "You can add more content related to problems here.";
-            await System.IO.File.WriteAllTextAsync(filePath, fileContent);
-
-            // Return the file name as part of the response
-            return Ok(new { FileName = fileName });
-            //return await _context.Problems.Include(p => p.TestCases).ToListAsync();
+            return await _context.Problems.Include(p => p.TestCases).ToListAsync();
         }
 
-
         // GET: api/judge/5
-
         [HttpGet("{id}")]
         public async Task<ActionResult<ProblemStruct>> GetProblem(int id)
         {
@@ -67,13 +45,10 @@ namespace api.Controller
                 return NotFound();
             }
 
-            
-
             return problemStruct;
         }
 
         [HttpPost]
-
         public async Task<ActionResult<ProblemStruct>> PostProblem(ProblemStruct problem)
         {
             _context.Problems.Add(problem);
@@ -81,10 +56,7 @@ namespace api.Controller
             return CreatedAtAction("GetProblem", new { id = problem.Id }, problem);
         }
 
-
-
         [HttpDelete("{id}")]
-
         public async Task<ActionResult<ProblemStruct>> DeleteProblem(int id)
         {
             var problem = await _context.Problems.FindAsync(id);
@@ -99,10 +71,7 @@ namespace api.Controller
             return problem;
         }
 
-
         [HttpDelete]
-
-
         public async Task<ActionResult<ProblemStruct>> DeleteAllProblems()
         {
             var problems = await _context.Problems.ToListAsync();
@@ -115,12 +84,9 @@ namespace api.Controller
             await _context.SaveChangesAsync();
 
             return Ok();
-
         }
 
-
         [HttpGet("user/submissions/{id}")]
-
         public async Task<ActionResult<IEnumerable<Submission>>> GetSubmissionsForUser(int id)
         {
             var submissions = await _context.Submissions
@@ -129,12 +95,8 @@ namespace api.Controller
 
             return Ok(submissions);
         }
-        
-
 
         [HttpGet("problem/submissions/{id}")]
-
-
         public async Task<ActionResult<IEnumerable<Submission>>> GetSubmissionsForProblem(int id)
         {
             var submissions = await _context.Submissions
@@ -144,12 +106,7 @@ namespace api.Controller
             return Ok(submissions);
         }
 
-
-
         [HttpGet("problem/submissions/{id}/user/{userId}")]
-
-
-
         public async Task<ActionResult<IEnumerable<Submission>>> GetSubmissionsForProblemByUser(int id, int userId)
         {
             var submissions = await _context.Submissions
@@ -159,12 +116,5 @@ namespace api.Controller
 
             return Ok(submissions);
         }
-                    
-        
     }
-        
-    
-
 }
-
-
