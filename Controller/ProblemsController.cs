@@ -112,5 +112,15 @@ namespace api.Controller
 
             return Ok(submissions);
         }
+
+
+        [HttpPost("submit")]
+
+        public async Task<ActionResult<Submission>> SubmitSolution(Submission submission)
+        {
+            _context.Submissions.Add(submission);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetSubmissionsForProblemByUser", new { id = submission.problemId, userId = submission.userId }, submission);
+        }
     }
 }
