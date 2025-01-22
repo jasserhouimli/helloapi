@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 namespace api.Controller
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProblemsController : ControllerBase
