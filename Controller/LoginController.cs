@@ -25,7 +25,6 @@ namespace api.Controller
             _configuration = configuration;
         }
 
-        // POST api/login
         [HttpPost]
         public async Task<ActionResult> LoginUser(UserDto user)
         {
@@ -47,11 +46,9 @@ namespace api.Controller
                 return Unauthorized("Invalid credentials");
             }
 
-            // Generate JWT token
             var token = GenerateJwtToken(userExists);
     
-            // Return the JWT token to the client
-            return Ok(new { Token = token  , UserId = userExists.Id});
+            return Ok(new { Token = token, UserId = userExists.Id });
         }
 
         private string GenerateJwtToken(User user)

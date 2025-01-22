@@ -23,20 +23,17 @@ namespace api.Controller
             _context = context;
         }
 
-        // GET: api/judge
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProblemStruct>>> GetProblems()
         {
-            
             return await _context.Problems.Include(p => p.TestCases).ToListAsync();
         }
 
-        // GET: api/judge/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProblemStruct>> GetProblem(int id)
         {
             var problemStruct = await _context.Problems
-                .Include(p => p.TestCases) // Include TestCases in the query
+                .Include(p => p.TestCases)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (problemStruct == null)
@@ -71,7 +68,7 @@ namespace api.Controller
         }
 
         [HttpDelete]
-        public async Task<ActionResult<ProblemStruct>> DeleteAllProblems()
+        public async Task<ActionResult> DeleteAllProblems()
         {
             var problems = await _context.Problems.ToListAsync();
             if (problems == null)
